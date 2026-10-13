@@ -1,11 +1,15 @@
-1. TESTING - Contract - Producer side
-================================================================================
-cd C:\Repo\LearningPath
-dotnet test services\Game.Api\tests\Contract\Game.Api.ContractTests.csproj
-
 ================================================================================
 1. RUN BACKEND
 ================================================================================
+Initialize:
+From frontend\game
+  npm install
+From Game.Api\
+  dotnet restore
+From Leaderboard.Api\
+  dotnet restore
+  dotnet ef database update
+
 From the repo root:
 
 Use **Ctrl+Shift+B** to run all frontend and backend tests, then build both APIs
@@ -34,3 +38,9 @@ npm run serve
 Open http://localhost:8080 in your browser. 
 
 The frontend calls the game backend at http://localhost:5151 and the leaderboard at http://localhost:5000
+
+================================================================================
+4. TEST PLAYWRIGHT:
+cd C:\Repo\Word_Game\frontend\game
+npx playwright test tests/E2E/UI/gameplayElements.spec.ts --headed
+================================================================================
