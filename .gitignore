@@ -1,0 +1,55 @@
+# Node.js
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# TypeScript and frontend build output
+**/dist/
+**/out/
+/frontend/game/public/dist/
+/frontend/game/.test-dist/
+
+# .NET build output and test results
+**/bin/
+**/obj/
+**/TestResults/
+**/artifacts/
+*.nupkg
+
+# Test and coverage output
+coverage/
+**/coverage/
+.nyc_output/
+*.coverage
+*.coveragexml
+*.trx
+*.lcov
+test-results/
+playwright-report/
+blob-report/
+cypress/videos/
+cypress/screenshots/
+BenchmarkDotNet.Artifacts/
+
+# Local IDE files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Local database and SQLite journal files
+/services/Game.Api/game.db
+/services/Game.Api/game.db-*
+/services/Leaderboard.Api/leaderboard.db
+/services/Leaderboard.Api/leaderboard.db-*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local sandbox files
+/sandbox/

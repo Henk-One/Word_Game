@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "test": "tsc --project tsconfig.test.json && node --test tests/Unit/gameSettings.test.cjs",
+    "build:app": "tsc --noEmit && node scripts/build.cjs",
+    "build": "npm test && npm run build:app",
+    "serve": "http-server dist -p 8080 -c-1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "esbuild": "^0.25.0",
+    "http-server": "^14.1.1",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.6"
+  }
+}

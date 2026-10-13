@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Guessing Game - LearningPath</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <style>
+        /* Lightweight, modern enterprise-style layout styling */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-card {
+            background-color: #2a2a2a;
+            border: 2px solid #444444;
+            border-radius: 8px;
+            width: 800px;
+            height: 600px;
+            box-sizing: border-box;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        h1 {
+            margin: 10px 0;
+            font-size: 36px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .meta-box {
+            margin: 15px 0;
+            text-align: center;
+            color: #cccccc;
+            line-height: 1.5;
+            font-size: 18px;
+            background-color: #222222;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid #444444;
+            min-width: 250px;
+        }
+
+        .menu-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 260px;
+            margin-top: 25px;
+        }
+
+        /* Native Accessible Interactive Controls */
+        button {
+            background-color: #444444;
+            color: #ffffff;
+            border: 2px solid #aaaaaa;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:focus {
+            outline: 3px solid #00ff00;
+            background-color: #555555;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #555555;
+        }
+
+        #btn-start {
+            color: #00ff00;
+            border-color: #00ff00;
+        }
+
+        #btn-highscores {
+            color: #ffff00;
+            border-color: #ffff00;
+        }
+
+        #btn-settings {
+            color: #66ccff;
+            border-color: #66ccff;
+        }
+
+        .view-panel {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .view-panel.active {
+            display: flex;
+        }
+
+        /* 📝 Form & Layout Configurations for the Settings View */
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 380px;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            color: #aaaaaa;
+            font-weight: bold;
+        }
+
+        select,
+        input[type="text"] {
+            background-color: #444444;
+            color: #ffffff;
+            border: 2px solid #aaaaaa;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        select:focus,
+        input[type="text"]:focus {
+            outline: 3px solid #00ff00;
+            background-color: #555555;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 14px;
+            min-height: 20px;
+            margin-top: 2px;
+            font-weight: bold;
+        }
+
+        /* 🏆 Leaderboard Data Grid Layout Styling */
+        .leaderboard-container {
+            width: 100%;
+            max-width: 550px;
+            height: 320px;
+            margin-top: 15px;
+            overflow-y: auto;
+            border: 2px solid #444444;
+            background-color: #222222;
+            border-radius: 4px;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .leaderboard-table th {
+            background-color: #333333;
+            color: #aaaaaa;
+            padding: 12px 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #444444;
+            position: sticky;
+            top: 0;
+        }
+
+        .leaderboard-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #333333;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .leaderboard-table tbody tr:nth-child(even) {
+            background-color: #282828;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background-color: #2f2f2f;
+        }
+
+        .table-loading {
+            text-align: center;
+            color: #ff9900 !important;
+            padding: 40px !important;
+            font-style: italic;
+        }
+
+        .table-error {
+            text-align: center;
+            color: #ff4444 !important;
+            padding: 40px !important;
+        }
+
+        /* 🎮 Corrected Gameplay Grid Framework Styles */
+        .game-hud {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 650px;
+            background-color: #222222;
+            border: 2px solid #444444;
+            border-radius: 6px;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #game-lives-container {
+            color: #ff3333;
+            letter-spacing: 2px;
+        }
+
+        #game-hints-container {
+            color: #ffff00;
+        }
+
+        .word-display-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+            margin-bottom: 10px;
+            /* 🎯 REDUCED from 20px to save vertical space */
+            background-color: #1a1a1a;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 4px;
+            border: 1px solid #333333;
+            padding: 10px 0;
+        }
+
+        .word-letter-blank {
+            border-bottom: 4px solid #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 32px;
+            font-weight: bold;
+            width: 32px;
+            display: inline-block;
+            text-align: center;
+            margin: 0 6px;
+            text-transform: uppercase;
+            min-height: 40px;
+            /* 🎯 FIXED: Force text color to high-visibility bright green so revealed characters stand out clearly */
+            color: #00ff00 !important;
+        }
+
+        /* Fixed Virtual Keyboard: Enforce clean 9-column wrapping constraint */
+        .keyboard-container {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 650px;
+            margin-bottom: 10px;
+            /* 🎯 REDUCED from 25px to pull the buttons up */
+        }
+
+        .key-btn {
+            background-color: #444444;
+            color: #ffffff;
+            border: 2px solid #666666;
+            border-radius: 4px;
+            padding: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .key-btn:focus {
+            outline: 2px solid #00ff00;
+            background-color: #555555;
+        }
+
+        .key-btn:hover:not(:disabled) {
+            background-color: #555555;
+            border-color: #aaaaaa;
+        }
+
+        .key-btn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+            border-color: #333333;
+        }
+
+        .key-correct {
+            background-color: #005500 !important;
+            border-color: #00cc00 !important;
+            color: #00ff00 !important;
+        }
+
+        .key-incorrect {
+            background-color: #550000 !important;
+            border-color: #cc0000 !important;
+            color: #ff5555 !important;
+        }
+
+        /* 💡 Interactive HUD Tooltip Layout Custom Alignment rules */
+        .tooltip-wrapper {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dashed #aaaaaa;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 280px;
+            background-color: #222222;
+            color: #ffffff;
+            text-align: left;
+            border: 2px solid #ff9900;
+            border-radius: 6px;
+            padding: 12px;
+            position: absolute;
+            z-index: 10;
+            /* Anchors the layout perfectly onto a new line right below the level element */
+            top: 130%;
+            left: 50%;
+            margin-left: -140px;
+            opacity: 0;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+        }
+
+        /* Upward-pointing arrow indicator */
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent #ff9900 transparent;
+        }
+
+        .tooltip-wrapper:hover .tooltip-text,
+        .tooltip-wrapper:focus .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-card">
+
+        <!-- 1. MAIN MENU PANEL VIEW -->
+        <div id="view-main-menu" class="view-panel active">
+            <h1>Word Guessing</h1>
+            <div class="meta-box">
+                Language: <span id="menu-lbl-language">ENGLISH</span><br>
+                Difficulty: <span id="menu-lbl-difficulty">BEGINNER</span><br>
+                Topic: <span id="menu-lbl-topic">CAR PARTS</span>
+            </div>
+            <nav class="menu-actions">
+                <button id="btn-start" type="button">START GAME</button>
+                <button id="btn-highscores" type="button">HIGHSCORES</button>
+                <button id="btn-settings" type="button">SETTINGS</button>
+            </nav>
+        </div>
+
+        <!-- 2. GAMEPLAY PANEL VIEW -->
+        <div id="view-game-scene" class="view-panel">
+            <h1>Guess the Word</h1>
+
+            <div id="game-meta-summary" class="meta-box"
+                style="margin: 0 0 15px 0; font-size: 14px; padding: 6px 15px;">
+                Mode: <span id="game-lbl-summary">ENGLISH / BEGINNER / CAR PARTS</span>
+            </div>
+
+            <!-- Game HUD Area -->
+            <div class="game-hud"
+                style="flex-direction: column; gap: 15px; align-items: center; padding: 15px 25px; height: auto;">
+                <!-- Row 1: Core Numerical Game Metrics -->
+                <div
+                    style="display: flex; justify-content: space-between; width: 100%; border-bottom: 1px solid #444444; padding-bottom: 10px;">
+                    <div>Score: <span id="game-score">0</span></div>
+
+                    <div class="tooltip-wrapper" tabindex="0">
+                        Level: <span id="game-level">1</span>
+                        <div id="level-rules-tooltip" class="tooltip-text">
+                            Loading round constraints...
+                        </div>
+                    </div>
+
+                    <!-- 🏆 RE-ADDED: Live Highscore Indicator -->
+                    <div style="color: #ffffaa;">Highscore: <span id="game-highscore">0</span></div>
+                </div>
+
+                <!-- Row 2: Player Interactive Resources (Moved down onto a clean new line) -->
+                <div
+                    style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding-top: 5px;">
+                    <div>
+                        <button id="btn-game-hint" type="button"
+                            style="font-size: 14px; padding: 4px 12px; border-color: #ffff00; color: #ffff00; cursor: pointer;">
+                            <span id="game-hints-container"></span>
+                        </button>
+                    </div>
+                    <div>Lives: <span id="game-lives-container"></span></div>
+                </div>
+            </div>
+
+
+            <div class="word-display-container">
+                <div id="game-word-blanks"></div>
+            </div>
+
+
+            <!-- 🎯 Inline Dynamic Notification Banner Overlay -->
+            <div id="game-announcement-banner" class="meta-box"
+                style="display: none; margin: 0 0 15px 0; font-size: 16px; padding: 10px 20px; border-color: #ff9900; color: #ffff00; font-weight: bold; width: 100%; max-width: 600px; box-sizing: border-box;">
+                <!-- Target notification text strings injected via script loops -->
+            </div>
+
+            <!-- Grid Keyboard Container -->
+            <div class="keyboard-container" id="game-virtual-keyboard"></div>
+
+            <nav class="menu-actions"
+                style="flex-direction: row; width: 440px; justify-content: space-between; margin-top: 15px;">
+                <button id="btn-game-restart" type="button"
+                    style="color: #ffff00; border-color: #ffff00; width: 200px; padding: 8px;">RESTART GAME</button>
+                <button id="btn-game-stop" class="btn-back" type="button"
+                    style="color: #ff3333; border-color: #ff3333; width: 200px; padding: 8px;">STOP GAME</button>
+            </nav>
+        </div>
+
+        <!-- 3. HIGHSCORES PANEL VIEW -->
+        <div id="view-highscores" class="view-panel">
+            <h1>Highscores</h1>
+            <div id="highscores-meta-summary" class="meta-box"
+                style="margin: 0 0 10px 0; font-size: 14px; padding: 6px 15px;">
+                Category: <span id="highscores-lbl-summary">ENGLISH / BEGINNER / CAR PARTS</span>
+            </div>
+
+            <div class="leaderboard-container">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 15%;">Rank</th>
+                            <th scope="col" style="width: 45%;">Player</th>
+                            <th scope="col" style="width: 40%;">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-data-rows">
+                        <tr>
+                            <td colspan="3" class="table-loading">Loading records from server...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <nav class="menu-actions" style="margin-top: 20px; width: 200px;">
+                <button id="btn-highscores-back" class="btn-back" type="button"
+                    style="color: #ffffff; border-color: #aaaaaa; padding: 8px;">BACK</button>
+            </nav>
+        </div>
+
+        <!-- 4. SETTINGS PANEL VIEW -->
+        <div id="view-settings" class="view-panel">
+            <h1>Settings</h1>
+
+            <div class="settings-form">
+                <div class="form-group">
+                    <label for="set-language">Language</label>
+                    <select id="set-language">
+                        <option value="english">ENGLISH</option>
+                        <option value="dutch">DUTCH</option>
+                        <option value="indonesian">INDONESIAN</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="set-difficulty">Difficulty</label>
+                    <select id="set-difficulty">
+                        <option value="beginner">BEGINNER</option>
+                        <option value="intermediate">INTERMEDIATE</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="set-topic">Topic</label>
+                    <select id="set-topic">
+                        <option value="car-parts">CAR PARTS</option>
+                        <option value="beverages">BEVERAGES</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="set-player-name">Player Name (Max 8 characters)</label>
+                    <input id="set-player-name" type="text" maxlength="8" placeholder="ENTER NAME">
+                    <div id="settings-error-text" class="error-message"></div>
+                </div>
+            </div>
+
+            <nav class="menu-actions"
+                style="flex-direction: row; width: 380px; justify-content: space-between; margin-top: 20px;">
+                <button id="btn-settings-cancel" class="btn-back" type="button"
+                    style="color: #ffffff; border-color: #aaaaaa;">CANCEL</button>
+                <button id="btn-settings-save" type="button"
+                    style="color: #00ff00; border-color: #00ff00;">SAVE</button>
+            </nav>
+        </div>
+
+    </div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>
