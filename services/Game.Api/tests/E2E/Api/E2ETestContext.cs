@@ -6,18 +6,21 @@ public class E2ETestContext : IDisposable
 
     public E2ETestContext()
     {
-        // Read configuration variable. Default to local project execution profile URL if empty
+        // Read configuration variable. Fail-fast if the target environment is not supplied.
         var baseUrl = Environment.GetEnvironmentVariable("GAME_API_TEST_URL");
         if (string.IsNullOrWhiteSpace(baseUrl))
         {
-            baseUrl = "http://localhost:5151/api/game";
+            throw new InvalidOperationException(
+                "The environment variable 'GAME_API_TEST_URL' is required but was not provided. " +
+                "Please verify that the central pipeline configuration runner is active.");
         }
 
-        Client = new HttpClient 
-        { 
-            BaseAddress = new Uri(baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/") 
+        Client = new HttpClient
+        {
+            BaseAddress = new Uri(baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/")
         };
     }
+
 
     public void Dispose()
     {

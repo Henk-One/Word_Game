@@ -15,11 +15,17 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IWordProvider, DbWordProvider>();
 
-// Http client to external Leaderboard.Api
+// Http client to external Leaderboard.Api - Dynamically configured (Loose Coupling)
 builder.Services.AddHttpClient<LeaderboardClient>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5000");
+    var leaderboardUrl = builder.Configuration["Services:LeaderboardApiUrl"];
+    if (string.IsNullOrWhiteSpace(leaderboardUrl))
+    {
+        throw new InvalidOperationException("The configuration 'Services:LeaderboardApiUrl' is missing or empty.");
+    }
+    client.BaseAddress = new Uri(leaderboardUrl);
 });
+
 
 // CORS
 builder.Services.AddCors(options =>

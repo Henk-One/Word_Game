@@ -27,7 +27,9 @@ export class LeaderboardDataService {
     difficulty: Difficulty,
     topic: Topic
   ): Promise<HighScoreRecord[]> {
-    const targetUrl = `http://localhost:5000/api/leaderboard/${language}/${difficulty}/${topic}`;
+    // FIX: Remove the duplicate '/api/leaderboard' string because it's already included in process.env.LEADERBOARD_API_URL
+    const targetUrl = `${process.env.LEADERBOARD_API_URL}/${language}/${difficulty}/${topic}`;
+
     const response = await fetch(targetUrl, { method: "GET" });
     if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
@@ -42,15 +44,18 @@ export class LeaderboardDataService {
 
   public async fetchTopScoreValueString(language: string, difficulty: string, topic: string): Promise<string> {
     try {
-      const targetUrl = `http://localhost:5000/api/leaderboard/${language}/${difficulty}/${topic}`;
+      const targetUrl = `${process.env.LEADERBOARD_API_URL}/${language}/${difficulty}/${topic}`;
       const response = await fetch(targetUrl, { method: "GET" });
+
       if (response.ok) {
         const entries = await response.json();
+        // FIX: The backend returns an array/list of highscores. Extract the first row ([0]) to read properties!
         if (entries && entries.length > 0) {
-          return `${entries[0].score} (${entries[0].playerName.toUpperCase()})`;
+          const topEntry = entries[0];
+          return `${topEntry.score} (${topEntry.playerName.toUpperCase()})`;
         }
       }
-    } catch { /* Fallback to safe zero state */ }
+    } catch { /* Fallback to safe zero state string */ }
     return "0";
   }
 
