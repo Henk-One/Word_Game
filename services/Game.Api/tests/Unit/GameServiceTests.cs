@@ -164,6 +164,31 @@ public class GameServiceTests
         Assert.True(finish.QualifiesForLeaderboard);
     }
 
+    // -------------------------------------------------------------------------
+    // NextRound clears guessed letters
+    // -------------------------------------------------------------------------
+    [Fact]
+    public async Task NextRound_ShouldClearGuessedLettersSet()
+    {
+        var db = CreateDbContext();
+        var provider = CreateWordProvider("CAT");
+        var service = CreateService(db, provider);
+
+        var start = await service.StartAsync(new StartGameRequest("english", "beginner", "car-parts", "Player1"));
+        await service.GuessAsync(new GuessRequest(start.GameId, "C"));
+        await service.GuessAsync(new GuessRequest(start.GameId, "X"));
+
+        var sessionBefore = await db.GameSessions.FindAsync(start.GameId);
+        Assert.NotEmpty(sessionBefore!.GetGuessedSet());
+
+        await service.NextRoundAsync(start.GameId);
+
+        var sessionAfter = await db.GameSessions.FindAsync(start.GameId);
+        Assert.NotNull(sessionAfter);
+        Assert.Empty(sessionAfter.GetGuessedSet());
+        Assert.Equal("", sessionAfter.GuessedLetters);
+    }
+
     // -----------------------------
     // Helper provider
     // -----------------------------

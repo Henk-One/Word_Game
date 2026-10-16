@@ -97,6 +97,32 @@ namespace Game.Api.Migrations
                     b.ToTable("GameSessions");
                 });
 
+            modelBuilder.Entity("Game.Api.Data.PlayerSettings", b =>
+                {
+                    b.Property<string>("PlayerName")
+                        .HasMaxLength(8)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Difficulty")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("PlayerName");
+
+                    b.ToTable("PlayerSettings");
+                });
+
             modelBuilder.Entity("Game.Api.Data.Word", b =>
                 {
                     b.Property<int>("Id")

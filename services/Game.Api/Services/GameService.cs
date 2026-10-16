@@ -41,7 +41,7 @@ public class GameService : IGameService
 
         var session = new GameSession
         {
-            PlayerName = request.PlayerName ?? "",
+            PlayerName = (request.PlayerName ?? "").Trim(),
             Language = request.Language,
             Difficulty = request.Difficulty,
             Topic = request.Topic,
@@ -106,6 +106,7 @@ public class GameService : IGameService
         session.Word = word;
         session.Revealed = new string('-', word.Length);
         session.GuessedLetters = "";
+        session.SetGuessedSet(new HashSet<char>());
         session.RoundActive = true;
 
         // Restore lives for the current level
@@ -444,6 +445,7 @@ public class GameService : IGameService
             session.RoundActive = true;
             session.Revealed = new string('-', session.Word.Length);
             session.GuessedLetters = "";
+            session.SetGuessedSet(new HashSet<char>());
         }
         else
         {
@@ -451,6 +453,7 @@ public class GameService : IGameService
             session.RoundActive = true;
             session.Revealed = new string('-', session.Word.Length);
             session.GuessedLetters = "";
+            session.SetGuessedSet(new HashSet<char>());
         }
     }
 

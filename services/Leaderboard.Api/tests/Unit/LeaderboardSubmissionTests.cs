@@ -43,6 +43,23 @@ public class LeaderboardSubmissionTests
     }
 
     [Fact]
+    public async Task SubmitScoreAsync_PlayerNameMatchingIsCaseInsensitive()
+    {
+        await using var db = CreateDbContext();
+        db.HighScores.Add(CreateEntity("HNK", 3));
+        await db.SaveChangesAsync();
+        var service = new LeaderboardService(db);
+
+        var qualifies = await service.SubmitScoreAsync(CreateRequest("hnk", 4));
+
+        var scores = await db.HighScores.ToListAsync();
+        Assert.True(qualifies);
+        Assert.Single(scores);
+        Assert.Equal("HNK", scores[0].PlayerName);
+        Assert.Equal(4, scores[0].Score);
+    }
+
+    [Fact]
     public async Task SubmitScoreAsync_LowerScore_DoesNotUpdateOrQualify()
     {
         await using var db = CreateDbContext();

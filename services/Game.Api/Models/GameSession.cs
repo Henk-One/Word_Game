@@ -14,7 +14,7 @@ public class GameSession
     public string Difficulty { get; set; } = "";
     public string Topic { get; set; } = "";
 
-    // Core hangman state
+    // Core Word Guess state
     public string Word { get; set; } = "";
     public string Revealed { get; set; } = "";
     public string GuessedLetters { get; set; } = "";

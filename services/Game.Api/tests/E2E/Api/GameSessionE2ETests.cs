@@ -18,7 +18,7 @@ public async Task Journey1_PlayerGuessesIncorrectly_TriggersGameOverState()
     var client = _context.Client;
 
     // 1. Initial Session Provisioning
-    var startRequest = new TestStartRequest("english", "beginner", "car-parts", "E2ELOSE");
+    var startRequest = new TestStartRequest("english", "beginner", "car-parts", "E2E_LOS");
     var startMsg = await client.PostAsJsonAsync("start", startRequest);
     Assert.Equal(HttpStatusCode.OK, startMsg.StatusCode);
 
@@ -55,7 +55,7 @@ public async Task Journey2_CompleteSuccessfulGameWord_SubmitsToLeaderboard_AndCl
 {
     var client = _context.Client;
     
-    var targetPlayer = $"E2E{Guid.NewGuid():N}"[..8];
+    var targetPlayer = $"E2E_{Guid.NewGuid():N}"[..8];
 
     try
     {

@@ -34,7 +34,9 @@ public class LeaderboardService : ILeaderboardService
             .ThenBy(x => x.Id)
             .ToListAsync();
 
-        var matchingScores = scores.Where(x => x.PlayerName == playerName).ToList();
+        var matchingScores = scores
+            .Where(x => string.Equals(x.PlayerName, playerName, StringComparison.OrdinalIgnoreCase))
+            .ToList();
         var existing = matchingScores.FirstOrDefault();
         var duplicateScores = matchingScores.Skip(1).ToList();
         if (duplicateScores.Count > 0)

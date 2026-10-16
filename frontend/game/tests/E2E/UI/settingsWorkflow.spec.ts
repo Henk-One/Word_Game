@@ -64,3 +64,20 @@ test.describe('Settings Panel Configuration Workflows', () => {
         await expect(difficultySelect).toHaveValue('beginner');
     });
 });
+
+test.describe('Settings Panel LocalStorage Edge Cases', () => {
+    test('Should display trimmed player name in settings form when localStorage contains untrimmed player name', async ({ page }) => {
+        await page.addInitScript(() => {
+            localStorage.setItem('preferredPlayerName', '  Alex  ');
+        });
+
+        await page.goto('http://localhost:8080');
+        await page.waitForSelector('#btn-settings', { state: 'visible' });
+        await page.click('#btn-settings');
+        await page.waitForSelector('#set-player-name', { state: 'visible' });
+
+        const inputName = page.locator('#set-player-name');
+        await expect(inputName).toHaveValue('Alex');
+    });
+});
+

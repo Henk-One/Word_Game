@@ -11,5 +11,6 @@ namespace Game.Api.Data
 
         public DbSet<GameSession> GameSessions { get; set; }
         public DbSet<Word> Words { get; set; }
+        public DbSet<PlayerSettings> PlayerSettings { get; set; }
     }
 }

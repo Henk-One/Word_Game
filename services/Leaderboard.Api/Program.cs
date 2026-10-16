@@ -27,6 +27,22 @@ builder.Services.AddDbContext<LeaderboardDbContext>(options =>
 
 var app = builder.Build();
 
+// Apply pending database migrations when the service starts.
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<LeaderboardDbContext>();
+        await context.Database.MigrateAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred during Leaderboard API database migration.");
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

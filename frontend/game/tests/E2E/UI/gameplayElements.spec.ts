@@ -3,29 +3,6 @@ import { test, expect } from '@playwright/test';
 test.describe('Gameplay Arena Core Elements Verification', () => {
 
     test.beforeEach(async ({ page }) => {
-        await page.route('**/start', async route => {
-            await route.fulfill({
-                status: 200,
-                contentType: 'application/json',
-                body: JSON.stringify({
-                    gameId: 'E2E-GAMEPLAY-ELEMENTS',
-                    wordLength: 3,
-                    revealed: '---',
-                    fullWord: 'CAR',
-                    lives: 11,
-                    score: 0,
-                    level: 1,
-                    hints: 0,
-                    hintCapacity: 3,
-                    bonusHintProgress: 0,
-                    solvedWords: 0,
-                    roundNumber: 1,
-                    repeatGuessPenalty: false,
-                    livesPerLevel: 11
-                })
-            });
-        });
-
         await page.goto('http://localhost:8080');
         await page.waitForSelector('#btn-start', { state: 'visible' });
 

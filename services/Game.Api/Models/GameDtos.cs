@@ -7,6 +7,10 @@ public record StartGameRequest(
     string PlayerName
 );
 
+public record PlayerSettingsResponse(string PlayerName, string Language, string Difficulty, string Topic);
+
+public record SavePlayerSettingsRequest(string Language, string Difficulty, string Topic);
+
 public record StartGameResponse(
     string GameId,
     int WordLength,

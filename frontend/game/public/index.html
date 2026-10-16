@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word Guessing Game - LearningPath</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="stylesheet" href="./styles.css">
     <style>
         /* Lightweight, modern enterprise-style layout styling */
         body {
@@ -428,13 +427,14 @@
                 <!-- Row 2: Player Interactive Resources (Moved down onto a clean new line) -->
                 <div
                     style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding-top: 5px;">
+                    <div>Lives: <span id="game-lives-container"></span></div>
                     <div>
                         <button id="btn-game-hint" type="button"
                             style="font-size: 14px; padding: 4px 12px; border-color: #ffff00; color: #ffff00; cursor: pointer;">
                             <span id="game-hints-container"></span>
                         </button>
                     </div>
-                    <div>Lives: <span id="game-lives-container"></span></div>
+                    
                 </div>
             </div>
 
@@ -475,20 +475,22 @@
                     <thead>
                         <tr>
                             <th scope="col" style="width: 15%;">Rank</th>
-                            <th scope="col" style="width: 45%;">Player</th>
-                            <th scope="col" style="width: 40%;">Score</th>
+                            <th scope="col" style="width: 35%;">Player</th>
+                            <th scope="col" style="width: 20%;">Score</th>
+                            <th scope="col" style="width: 30%;">Date</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-data-rows">
                         <tr>
-                            <td colspan="3" class="table-loading">Loading records from server...</td>
+                            <td colspan="4" class="table-loading">Loading records from server...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <nav class="menu-actions" style="margin-top: 20px; width: 200px;">
-                <button id="btn-highscores-back" class="btn-back" type="button"
-                    style="color: #ffffff; border-color: #aaaaaa; padding: 8px;">BACK</button>
+            <nav class="highscore-navigation" aria-label="Highscore navigation">
+                <button id="btn-highscores-previous" type="button">BACK</button>
+                <button id="btn-highscores-exit" class="btn-back" type="button">EXIT</button>
+                <button id="btn-highscores-next" type="button">NEXT</button>
             </nav>
         </div>
 
